@@ -1,0 +1,63 @@
+
+---------------------------------------------------------------------------------------------------
+Version: 0.1.999
+Date: 9999-99-99
+
+  TODO:
+    - Some sort of ally/declare war system?
+    - Lobby is a different surface instead of nauvis?
+  Compatability:
+    - AAI starter science config for starter kit
+
+---------------------------------------------------------------------------------------------------
+Version: 0.1.1
+Date: 2021-03-23
+
+  Bugfix:
+    - Fix offline protection to no longer protect when online
+    - Fixed offline time to properly display when online
+
+---------------------------------------------------------------------------------------------------
+Version: 0.1.0
+Date: 2021-03-19
+
+  Features:
+    - Force info ui
+    - Global death announcements and counts
+  Bugfix:
+    - Fix evolution, will require manual map fixing to reset existing saves
+  Removed:
+    - old player ui
+    - ability to require/grant founding permissions for new groups
+
+---------------------------------------------------------------------------------------------------
+Version: 0.0.4
+Date: 2021-03-07
+
+  Bugfix:
+    - Fixed detection of offline players
+    - Fixed biter expansion when force offline
+    - Prevented biter pollution attacks when force offline
+
+---------------------------------------------------------------------------------------------------
+Version: 0.0.3
+Date: 2021-02-24
+
+  Features:
+    - Prevent biter expansion when force is offline
+    - Prevent evolution increasing from pollution when force is offline
+    - Prevent force buildings from being attacked by biters when force is offline
+
+---------------------------------------------------------------------------------------------------
+Version: 0.0.2
+Date: 2021-02-22
+
+  Bugfix:
+    - Fixed crash creating second starting planet
+
+---------------------------------------------------------------------------------------------------
+Version: 0.0.1
+Date: 2021-02-21
+
+  Features:
+    - Initial Implementation

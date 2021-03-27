@@ -1,0 +1,12 @@
+{
+  "name": "rd-fuelmix",
+  "version": "0.0.1",
+  "factorio_version": "1.1",
+  "title": "Rd's Fuel Mix",
+  "author": "Rdjrjqouqcu",
+  "homepage": "",
+  "description":"Mix fuels together to get fuel.\nOptionally more efficiently.",
+  "dependencies": [
+  ]
+}
+
