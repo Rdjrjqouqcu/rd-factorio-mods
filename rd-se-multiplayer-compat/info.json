@@ -4,7 +4,7 @@
   "factorio_version": "1.1",
   "title": "Rd's Space Exploration Multiplayer Compat",
   "author": "Rdjrjqouqcu",
-  "homepage": "",
+  "homepage": "https:// https://discord.gg/zZ7XyDzZRy",
   "description":"Provides a UI on the multi-homeworld Space Exploration\n  Provides separate evolution per homeworld\n  All planets have a random level of evolution\n    Evolution based on https://mods.factorio.com/mod/Sceatorio",
   "dependencies": [
     "space-exploration >= 0.5.37",

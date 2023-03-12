@@ -3,5 +3,12 @@ Version: 1.0.0
 Date: 2023-03-12
 
   Features:
-    - Initial Implementation
+    - Initial Release
+
+---------------------------------------------------------------------------------------------------
+Version: 1.0.1
+Date: 2023-03-12
+
+  Features:
+    - Recipe rebalance
 

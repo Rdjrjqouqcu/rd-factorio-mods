@@ -60,13 +60,12 @@ local item_solid_fuel_mixer = {
 local recipe_solid_mixer = {
   type = "recipe",
   name = "fuelmixer-solid",
-  -- TODO add research
-  enabled = true, 
+  enabled = false,
   energy_required = 4,
   ingredients = {
     {"steel-plate", 10},
-    {"stone-brick", 10},
-    {"stone-furnace", 1},
+    {"assembling-machine-2", 1},
+    {"steel-furnace", 1},
   },
   result = "fuelmixer-solid",
 }
@@ -194,12 +193,11 @@ local item_fluid_fuel_mixer = {
 local recipe_fluid_mixer = {
   type = "recipe",
   name = "fuelmixer-fluid",
-  -- TODO add research
-  enabled = true, 
+  enabled = false,
   energy_required = 4,
   ingredients = {
     {"steel-plate", 10},
-    {"stone-brick", 10},
+    {"storage-tank", 1},
     {"boiler", 1},
   },
   result = "fuelmixer-fluid",
