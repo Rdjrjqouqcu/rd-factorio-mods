@@ -1,3 +1,11 @@
 
-Disallow fuel-mix from being used in the fuel mixer
+Balance mixer recipes better
+
+Get better icons/add animations
+
+Disallow both fuel-mixes from being used in the fuel mixer
+
+High Throughput mixers that can output more than 1 unit per tick
+
+Fluid Fuel Mixer that has a built in overflow valve
 

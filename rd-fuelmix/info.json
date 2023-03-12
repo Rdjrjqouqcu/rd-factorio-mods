@@ -1,12 +1,13 @@
 {
   "name": "rd-fuelmix",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "factorio_version": "1.1",
   "title": "Rd's Fuel Mix",
   "author": "Rdjrjqouqcu",
   "homepage": "",
-  "description":"Mix fuels together to get homgenous fuel.\nOptionally more efficiently.\n\nicons created by Freepik - Flaticon",
+  "description":"Mix fuels together to get standardized fuel.\nOptionally more efficiently.\n\nicons created by Freepik - Flaticon",
   "dependencies": [
+    "base >= 0.18.0"
   ]
 }
 
