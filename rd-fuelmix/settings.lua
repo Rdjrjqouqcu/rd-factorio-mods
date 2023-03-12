@@ -15,6 +15,13 @@ data:extend({
 	},
 	{
 		type = "bool-setting",
+		name = "rd-fuelmix-research-pyanodons",
+		setting_type = "startup",
+		default_value = false,
+		order = "aba",
+	},
+	{
+		type = "bool-setting",
 		name = "rd-fuelmix-solid-enable",
 		setting_type = "startup",
 		default_value = true,

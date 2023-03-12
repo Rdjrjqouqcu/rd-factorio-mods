@@ -12,3 +12,12 @@ Date: 2023-03-12
   Features:
     - Recipe rebalance
 
+---------------------------------------------------------------------------------------------------
+Version: 1.0.2
+Date: 2023-03-12
+
+  Features:
+    - Added Pyanodons recipes
+  Bugfix:
+    - Fixed localizations
+

@@ -64,7 +64,7 @@ local recipe_solid_mixer = {
   energy_required = 4,
   ingredients = {
     {"steel-plate", 10},
-    {"assembling-machine-2", 1},
+    {"assembling-machine-1", 1},
     {"steel-furnace", 1},
   },
   result = "fuelmixer-solid",
@@ -147,17 +147,6 @@ local entity_solid_mixer = {
     }
   },
 }
-
-if include_solid_mixer then
-  table.insert(research.effects,{type = "unlock-recipe",recipe = "fuelmixer-solid"})
-  data:extend{
-    item_solid_fuel_mix,
-    item_solid_fuel_mixer,
-    recipe_solid_mixer,
-    recipe_solid_mix,
-    entity_solid_mixer,
-  }
-end
 
 --
 --  FLUID MIXER
@@ -302,6 +291,47 @@ local entity_fluid_mixer = {
   },
 }
 
+--
+--  MOD COMPATIBILTY
+--
+
+-- pyanodons
+if mods["pyrawores"] and not settings.startup["rd-fuelmix-research-pyanodons"].value then
+  local base_material = {"steel-plate", 20}
+  if mods["pypetroleumhandling"] then
+    base_material = {"small-parts-01", 20}
+  end
+  recipe_solid_mixer.ingredients = {
+    base_material,
+    {"jaw-crusher", 1},
+    {"assembling-machine-1", 1},
+  }
+  recipe_fluid_mixer.ingredients = {
+    base_material,
+    {"tar-processing-unit", 1},
+    {"boiler", 1},
+  }
+  research.prerequisites = {
+    "crusher",
+    "tar-processing",
+  }
+end
+
+--
+--  REGISRATION
+--
+
+if include_solid_mixer then
+  table.insert(research.effects,{type = "unlock-recipe",recipe = "fuelmixer-solid"})
+  data:extend{
+    item_solid_fuel_mix,
+    item_solid_fuel_mixer,
+    recipe_solid_mixer,
+    recipe_solid_mix,
+    entity_solid_mixer,
+  }
+end
+
 if include_fluid_mixer then
   table.insert(research.effects,{type = "unlock-recipe",recipe = "fuelmixer-fluid"})
   data:extend{
@@ -311,12 +341,7 @@ if include_fluid_mixer then
     recipe_fluid_mix,
     entity_fluid_mixer,
   }
-  
 end
-
---
---  RESEARCH
---
 
 if separate_research then
   data:extend{

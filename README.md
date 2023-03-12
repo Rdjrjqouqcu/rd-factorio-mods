@@ -1,2 +1,4 @@
 
-Rd's development of factorio mods.
+Rd's development area for factorio mods
+
+Feel free to message me on discord with any questions
