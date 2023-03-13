@@ -1,0 +1,12 @@
+Additional configuration options for the Warehousing Mod, along with some research and recipe overrides.
+
+Currently supported mods:
+- pyanodons industry (match research cost to py warehouse)
+
+
+Tweaks
+
+logistics network
+storage
+
+https://github.com/Rdjrjqouqcu/rd-factorio-mods

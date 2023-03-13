@@ -1,0 +1,16 @@
+{
+  "name": "rd-warehousing-config",
+  "version": "1.0.0",
+  "factorio_version": "1.1",
+  "title": "Rd's Warehousing Mod Configurator",
+  "author": "Rdjrjqouqcu",
+  "homepage": "https:// https://discord.gg/zZ7XyDzZRy",
+  "description":"Additional configuration options for the Warehousing Mod, along with some research and recipe overrides",
+  "dependencies": [
+    "base >= 0.18.0",
+    "Warehousing",
+    "? pyindustry",
+    "(?) pypostprocessing"
+  ]
+}
+
