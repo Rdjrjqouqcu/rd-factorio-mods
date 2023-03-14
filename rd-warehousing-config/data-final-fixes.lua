@@ -2,6 +2,7 @@
 --
 -- PYANODONS COMPAT UNIT
 --
+
 if mods["pyindustry"] and settings.startup["rd-warehousing-compat-pyanodons"].value then
 
   local warehouse = data.raw["technology"]["warehouse-research"]

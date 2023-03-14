@@ -1,3 +1,5 @@
 /*.zip
 mod-list.json
 mod-settings.dat
+*.lnk
+/archive/
