@@ -1,0 +1,13 @@
+{
+  "name": "rd-biter-remover",
+  "version": "1.0.0",
+  "factorio_version": "1.1",
+  "title": "Rd's Biter/Pollution Removal Research",
+  "author": "Rdjrjqouqcu",
+  "homepage": "https:// https://discord.gg/zZ7XyDzZRy",
+  "description":"Adds research that toggles biters/pollution in game",
+  "dependencies": [
+    "base >= 0.18.0"
+  ]
+}
+

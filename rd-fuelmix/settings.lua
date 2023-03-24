@@ -31,7 +31,7 @@ data:extend({
 		type = "int-setting",
 		name = "rd-fuelmix-solid-amount",
 		setting_type = "startup",
-		default_value = 1,
+		default_value = 10,
 		order = "bb",
 	},
 	{
@@ -73,21 +73,21 @@ data:extend({
 		type = "int-setting",
 		name = "rd-fuelmix-fluid-amount",
 		setting_type = "startup",
-		default_value = 5,
+		default_value = 10,
 		order = "cb",
 	},
 	{
 		type = "double-setting",
 		name = "rd-fuelmix-fluid-fuelrequired",
 		setting_type = "startup",
-		default_value = 2,
+		default_value = 10,
 		order = "cc",
 	},
 	{
 		type = "double-setting",
 		name = "rd-fuelmix-fluid-fuelvalue",
 		setting_type = "startup",
-		default_value = 2,
+		default_value = 10,
 		order = "cd",
 	},
 })
