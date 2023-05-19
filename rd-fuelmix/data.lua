@@ -163,8 +163,8 @@ local fluid_fluid_fuel_mix = {
   icon_size = 512,
   fuel_value = settings.startup["rd-fuelmix-fluid-fuelvalue"].value .. "MJ",
   default_temperature = 15,
-  base_color = {r=160, g=32, b=240, a=1},
-  flow_color = {r=160, g=32, b=240, a=1},
+  base_color = {r=160, g=32, b=240},
+  flow_color = {r=160, g=32, b=240},
 }
 
 local item_fluid_fuel_mixer = {

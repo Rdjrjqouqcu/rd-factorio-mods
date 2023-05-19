@@ -37,32 +37,5 @@ if settings.startup["rd-warehousing-override-slots"].value then
   data.raw["linked-container"]["linked-storehouse"].inventory_size = storehouse_slots
 end
 
---
--- PYANODONS COMPAT
---
-if mods["pyindustry"] and settings.startup["rd-warehousing-compat-pyanodons"].value then
-
-  local warehouse = data.raw["technology"]["warehouse-research"]
-  local pywarehouse = data.raw["technology"]["py-warehouse-research"]
-
-  table_remove(warehouse["prerequisites"], "steel-processing")
-  for _, v in pairs(pywarehouse["prerequisites"]) do
-    table.insert(warehouse["prerequisites"], v)
-  end
-
-  local warehousel1 = data.raw["technology"]["warehouse-logistics-research-1"]
-  local warehousel2 = data.raw["technology"]["warehouse-logistics-research-2"]
-  local pywarehousel = data.raw["technology"]["py-warehouse-logistics-research"]
-
-  table_remove(warehousel1["prerequisites"], "robotics")
-  table_remove(warehousel2["prerequisites"], "logistic-system")
-  for _, v in pairs(pywarehousel["prerequisites"]) do
-    table.insert(warehousel1["prerequisites"], v)
-    table.insert(warehousel2["prerequisites"], v)
-  end
-  table_remove(warehousel1["prerequisites"], "py-warehouse-research")
-  table_remove(warehousel2["prerequisites"], "py-warehouse-research")
-
-end
 
 

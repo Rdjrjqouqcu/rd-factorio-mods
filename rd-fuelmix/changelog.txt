@@ -35,3 +35,10 @@ Date: 2023-03-14
   Balancing:
     - Changed default fuel values to handle 100MW per machine
     - Increased default fuel values for liquid mix to match solid mix
+
+---------------------------------------------------------------------------------------------------
+Version: 1.0.5
+Date: 2023-05-19
+
+  Bugfix:
+    - Fixed missing color in tooltip bar

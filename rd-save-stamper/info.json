@@ -1,0 +1,14 @@
+{
+  "name": "rd-save-stamper",
+  "version": "1.0.0",
+  "factorio_version": "1.1",
+  "title": "Rd's Automatic Save Stamper",
+  "author": "Rdjrjqouqcu",
+  "homepage": "https:// https://discord.gg/zZ7XyDzZRy",
+  "description":"Adds a seed specific autosave for use with FactorioMaps Timelapse, or for server backups",
+  "dependencies": [
+    "base >= 0.18.0",
+    "? L0laapk3_FactorioMaps"
+  ]
+}
+
