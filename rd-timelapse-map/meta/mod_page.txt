@@ -1,0 +1,53 @@
+Automatically takes screenshots regularly for use in a timelapse map.
+
+Takes a screenshot of every chunk with an entity from certain forces every n minutes.
+These screenshots can be used with leaflet or another map library to display a base or playthrough.
+
+
+
+Each screenshot will be saved in script-output/timelapse-map/surface/x_y.png
+
+A metadata.json file will also be created containing the following info:
+```json
+{
+    "tick": 0,
+    "minute": 0,
+    "seed": 520997249,
+    "tracked_surfaces": ["nauvis"],
+    "tracked_forces": ["player"],
+    "captured_chunks": {
+        "nauvis": [[-2,0],[-1,-1],[-1,0],[0,-1],[0,0]]
+    },
+    "pixels_per_tile":64,
+    "mods":{
+        "base":"1.1.88",
+        "rd-timelapse-map":"0.0.1",
+        "creative-mod":"1.8.1"
+    }
+}
+```
+
+
+There is also a config option to replace "timelapse-map" with the world seed in all paths.
+
+
+
+If you enable autosaving, will trigger a save when collecting chunk screenshots.
+
+By default, it autosaves to saves/_autosave-timelapse-map/_autosave-timelapse-map/0000000.zip
+  You will have to create these folders, otherwise it will pop up an error message and fail to save.
+    See this bug report for more details: https://forums.factorio.com/viewtopic.php?f=7&t=105701
+    There is also a feature request so that it doesn't have to be an autosave: https://forums.factorio.com/viewtopic.php?f=28&t=105700
+
+
+
+
+Currently, this does not generate the website needed to display the chunk tiles.
+I will eventually implement this, once I figure out the javascript.
+
+
+
+
+Based on https://mods.factorio.com/mod/L0laapk3_FactorioMaps
+
+https://github.com/Rdjrjqouqcu/rd-factorio-mods
