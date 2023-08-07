@@ -5,3 +5,10 @@ Date: 2023-08-07
   Features:
     - Initial Implementation
 
+---------------------------------------------------------------------------------------------------
+Version: 1.0.1
+Date: 2023-08-07
+
+  Features:
+    - Added configurable entity radius, for chunk edge smoothing
+

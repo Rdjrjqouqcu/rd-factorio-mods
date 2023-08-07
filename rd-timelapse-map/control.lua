@@ -4,7 +4,7 @@ local icon = require("site/lua/icon")
 local ticks_per_minute = 60 * 60
 
 local function name_prefix()
-    if settings.startup["rd-timelapse-map-seed"].value then
+    if settings.global["rd-timelapse-map-seed"].value then
         return string.format("%d", global.seed)
     else
         return "timelapse-map"
@@ -18,6 +18,41 @@ local function do_autosave(current_minute)
     game.auto_save(save_name)
 end
 
+local function expand_area(area)
+    local radius = settings.global["rd-timelapse-map-radius"].value
+    return {
+        left_top = {
+            x = area.left_top.x - radius,
+            y = area.left_top.y - radius,
+        },
+        right_bottom  = {
+            x = area.right_bottom .x + radius,
+            y = area.right_bottom .y + radius,
+        },
+    }
+end
+
+local function fix_crash_site(surface, chunkArea)
+    return surface.count_entities_filtered{
+        area = chunkArea,
+        name = {
+            "crash-site-spaceship-wreck-small-1",
+            "crash-site-spaceship-wreck-small-2",
+            "crash-site-spaceship-wreck-small-3",
+            "crash-site-spaceship-wreck-small-4",
+            "crash-site-spaceship-wreck-small-5",
+            "crash-site-spaceship-wreck-small-6",
+            "crash-site-spaceship-wreck-medium-1",
+            "crash-site-spaceship-wreck-medium-2",
+            "crash-site-spaceship-wreck-medium-3",
+            "crash-site-spaceship-wreck-big-1",
+            "crash-site-spaceship-wreck-big-2",
+            "crash-site-spaceship",
+        },
+        limit = 1,
+    }
+end
+
 local function do_screenshot(surface_name, current_minute, forces)
     local surface = game.get_surface(surface_name)
     if surface == nil then
@@ -27,35 +62,19 @@ local function do_screenshot(surface_name, current_minute, forces)
 
     local chunks = {}
     for chunkPos in surface.get_chunks() do
+        local chunkArea = expand_area(chunkPos.area)
         local entities = surface.count_entities_filtered{
-            area = chunkPos.area,
+            area = chunkArea,
             force = forces,
             limit = 1,
         }
-        if settings.startup["rd-timelapse-map-screenshot-fix-crash-site"].value then
-            entities = entities + surface.count_entities_filtered{
-                area = chunkPos.area,
-                name = {
-                    "crash-site-spaceship-wreck-small-1",
-                    "crash-site-spaceship-wreck-small-2",
-                    "crash-site-spaceship-wreck-small-3",
-                    "crash-site-spaceship-wreck-small-4",
-                    "crash-site-spaceship-wreck-small-5",
-                    "crash-site-spaceship-wreck-small-6",
-                    "crash-site-spaceship-wreck-medium-1",
-                    "crash-site-spaceship-wreck-medium-2",
-                    "crash-site-spaceship-wreck-medium-3",
-                    "crash-site-spaceship-wreck-big-1",
-                    "crash-site-spaceship-wreck-big-2",
-                    "crash-site-spaceship",
-                },
-                limit = 1,
-            }
+        if settings.global["rd-timelapse-map-screenshot-fix-crash-site"].value then
+            entities = entities + fix_crash_site(surface, chunkArea)
         end
         if entities > 0 then
-            -- game.print(string.format("checking chunk %d %d entites=%d", chunkPos.x, chunkPos.y, entities))
+            -- game.print(string.format("checking chunk %d %d %s entites=%d", chunkPos.x, chunkPos.y, game.table_to_json(chunkArea), entities))
             local screenshot_path = string.format("%s/%d/%s/%d_%d.png", name_prefix(), current_minute, surface_name, chunkPos.x, chunkPos.y)
-            local resolution = settings.startup["rd-timelapse-map-resolution"].value 
+            local resolution = settings.global["rd-timelapse-map-resolution"].value 
             local scale = resolution / 32
             game.take_screenshot{
                 surface = surface_name,
@@ -63,7 +82,7 @@ local function do_screenshot(surface_name, current_minute, forces)
                 zoom = scale,
                 resolution = {x = 32*resolution, y = 32*resolution},
                 path = screenshot_path,
-                show_entity_info = settings.startup["rd-timelapse-map-screenshot-altmode"].value,
+                show_entity_info = settings.global["rd-timelapse-map-screenshot-altmode"].value,
                 daytime = 0,
             }
             table.insert(chunks, {chunkPos.x, chunkPos.y})
@@ -83,8 +102,10 @@ local function do_metadata(ctime, surfaces, forces, captured)
         tracked_surfaces = surfaces,
         tracked_forces = forces,
         captured_chunks = captured,
-        pixels_per_tile = settings.startup["rd-timelapse-map-resolution"].value,
+        pixels_per_tile = settings.global["rd-timelapse-map-resolution"].value,
+        entity_radius = settings.global["rd-timelapse-map-radius"].value,
         mods = game.active_mods,
+        map_exchange_string = game.get_map_exchange_string(),
     }
     game.write_file(filename, game.table_to_json(metadata))
 end
@@ -93,11 +114,11 @@ local function do_actions(event)
     local current_minute = event.tick / ticks_per_minute
     game.print({"info.rd-timelapse-map-snapshot-message", current_minute})
 
-    if settings.startup["rd-timelapse-map-autosave"].value then
+    if settings.global["rd-timelapse-map-autosave"].value then
         do_autosave(current_minute)
     end
 
-    local force_string = settings.startup["rd-timelapse-map-forces"].value
+    local force_string = settings.global["rd-timelapse-map-forces"].value
     local forces = {}
     for force in string.gmatch(force_string, "([^,;]+)", 0) do
         if force ~= "" then
@@ -111,7 +132,7 @@ local function do_actions(event)
 
     local captured = {}
     local surface_names = {}
-    local surfaces = settings.startup["rd-timelapse-map-surfaces"].value
+    local surfaces = settings.global["rd-timelapse-map-surfaces"].value
     for surface in string.gmatch(surfaces, "([^,;]+)", 0) do
         if surface ~= "" then
             captured[surface] = do_screenshot(surface, current_minute, forces)
@@ -128,12 +149,12 @@ local function create_files()
     game.write_file(name_prefix().."/lib/favicon.ico", base64.decode(icon.icon))
 end
 
-script.on_nth_tick(settings.startup["rd-timelapse-map-delay"].value * ticks_per_minute, do_actions)
+script.on_nth_tick(settings.global["rd-timelapse-map-delay"].value * ticks_per_minute, do_actions)
 
 script.on_init(
     function()
         global.seed = game.default_map_gen_settings.seed
-        if settings.startup["rd-timelapse-map-create-site"].value then
+        if settings.global["rd-timelapse-map-create-site"].value then
             create_files()
         end
     end
@@ -144,7 +165,7 @@ local GUI_FRAME_NAME = "rd-timelapse-map-frame"
 local GUI_LABEL_NAME = "rd-timelapse-map-label"
 
 local function tick_to_countdown(tick)
-    local target_second = settings.startup["rd-timelapse-map-delay"].value * ticks_per_minute / 60
+    local target_second = settings.global["rd-timelapse-map-delay"].value * ticks_per_minute / 60
     local seconds_remaining = target_second - (math.floor(tick / 60) % target_second)
     local seconds = seconds_remaining % 60
     local minutes = seconds_remaining / 60
