@@ -12,3 +12,15 @@ Date: 2023-08-07
   Features:
     - Added configurable entity radius, for chunk edge smoothing
 
+---------------------------------------------------------------------------------------------------
+Version: 1.0.2
+Date: 2023-08-14
+
+  Features:
+    - Added snapshot complete message (with saved chunk count)
+    - Added support for different screenshot modes
+    - Entity map mode was the prior behavior, map only built entities (plus radius)
+    - Charted map mode will screenshot chunks revealed in the minimap
+    - Revealed map mode will screenshot anything currently visible (i.e. shown by radar)
+    - Support for 'ALL' and '*' in surface and force filters
+

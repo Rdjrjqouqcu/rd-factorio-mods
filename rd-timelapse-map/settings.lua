@@ -39,17 +39,25 @@ data:extend({
 	},
 	{
 		type = "string-setting",
+		name = "rd-timelapse-map-mode",
+		setting_type = "runtime-global",
+		default_value = "entities",
+		allowed_values = {"entities", "charted", "revealed"},
+		order = "c-a",
+	},
+	{
+		type = "string-setting",
 		name = "rd-timelapse-map-surfaces",
 		setting_type = "runtime-global",
 		default_value = "nauvis",
-		order = "c-a",
+		order = "c-b",
 	},
 	{
 		type = "string-setting",
 		name = "rd-timelapse-map-forces",
 		setting_type = "runtime-global",
 		default_value = "player",
-		order = "c-b",
+		order = "c-c",
 	},
 	{
 		type = "int-setting",

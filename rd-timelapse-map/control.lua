@@ -53,26 +53,62 @@ local function fix_crash_site(surface, chunkArea)
     }
 end
 
+local function should_screenshot_chunk_entities(surface, chunkPos, forces)
+    local chunkArea = expand_area(chunkPos.area)
+    local entities = surface.count_entities_filtered{
+        area = chunkArea,
+        force = forces,
+        limit = 1,
+    }
+    if settings.global["rd-timelapse-map-screenshot-fix-crash-site"].value then
+        entities = entities + fix_crash_site(surface, chunkArea)
+    end
+    return entities > 0
+    -- game.print(string.format("checking chunk %d %d %s entites=%d", chunkPos.x, chunkPos.y, game.table_to_json(chunkArea), entities))
+end
+
+local function should_screenshot_chunk_charted(surface, chunkPos, forces)
+    for _, force in ipairs(forces) do
+        if game.forces[force].is_chunk_charted(surface, chunkPos) then
+            return true
+        end
+    end
+    return false
+end
+
+local function should_screenshot_chunk_revealed(surface, chunkPos, forces)
+    for _, force in ipairs(forces) do
+        if game.forces[force].is_chunk_visible(surface, chunkPos) then
+            return true
+        end
+    end
+    return false
+end
+
+local function should_screenshot_chunk(surface, chunkPos, forces)
+    if settings.global["rd-timelapse-map-mode"].value == "entities" then
+        return should_screenshot_chunk_entities(surface, chunkPos, forces)
+    end
+    if settings.global["rd-timelapse-map-mode"].value == "charted" then
+        return should_screenshot_chunk_charted(surface, chunkPos, forces)
+    end
+    if settings.global["rd-timelapse-map-mode"].value == "revealed" then
+        return should_screenshot_chunk_revealed(surface, chunkPos, forces)
+    end
+    game.print("Internal setting error, unknown map mode: "..settings.global["rd-timelapse-map-mode"].value)
+    return false
+end
+
 local function do_screenshot(surface_name, current_minute, forces)
     local surface = game.get_surface(surface_name)
     if surface == nil then
         game.print({"info.rd-timelapse-map-surface-missing", surface_name})
         return
     end
-
     local chunks = {}
+    local chunk_count = 0
     for chunkPos in surface.get_chunks() do
-        local chunkArea = expand_area(chunkPos.area)
-        local entities = surface.count_entities_filtered{
-            area = chunkArea,
-            force = forces,
-            limit = 1,
-        }
-        if settings.global["rd-timelapse-map-screenshot-fix-crash-site"].value then
-            entities = entities + fix_crash_site(surface, chunkArea)
-        end
-        if entities > 0 then
-            -- game.print(string.format("checking chunk %d %d %s entites=%d", chunkPos.x, chunkPos.y, game.table_to_json(chunkArea), entities))
+        if should_screenshot_chunk(surface, chunkPos, forces) then
             local screenshot_path = string.format("%s/%d/%s/%d_%d.png", name_prefix(), current_minute, surface_name, chunkPos.x, chunkPos.y)
             local resolution = settings.global["rd-timelapse-map-resolution"].value 
             local scale = resolution / 32
@@ -86,10 +122,12 @@ local function do_screenshot(surface_name, current_minute, forces)
                 daytime = 0,
             }
             table.insert(chunks, {chunkPos.x, chunkPos.y})
+            chunk_count = chunk_count + 1
         end
     end
 
     game.set_wait_for_screenshots_to_finish()
+    game.print({"info.rd-timelapse-map-snapshot-complete-message", chunk_count, surface_name})
     return chunks
 end
 
@@ -110,16 +148,17 @@ local function do_metadata(ctime, surfaces, forces, captured)
     game.write_file(filename, game.table_to_json(metadata))
 end
 
-local function do_actions(event)
-    local current_minute = event.tick / ticks_per_minute
-    game.print({"info.rd-timelapse-map-snapshot-message", current_minute})
-
-    if settings.global["rd-timelapse-map-autosave"].value then
-        do_autosave(current_minute)
-    end
-
+local function load_forces()
     local force_string = settings.global["rd-timelapse-map-forces"].value
     local forces = {}
+    for force in string.gmatch(force_string, "([^,;]+)", 0) do
+        if force == "ALL" or force == "*" then
+            for _, f in pairs(game.forces) do
+                table.insert(forces, f.name)
+            end
+            return forces
+        end
+    end
     for force in string.gmatch(force_string, "([^,;]+)", 0) do
         if force ~= "" then
             if game.forces[force] ~= nil then
@@ -129,18 +168,55 @@ local function do_actions(event)
             end
         end
     end
+    if table_size(forces) == 0 then
+        game.print({"info.rd-timelapse-map-force-missing", "ANY"})
+    end
+    return forces
+end
 
-    local captured = {}
-    local surface_names = {}
-    local surfaces = settings.global["rd-timelapse-map-surfaces"].value
-    for surface in string.gmatch(surfaces, "([^,;]+)", 0) do
-        if surface ~= "" then
-            captured[surface] = do_screenshot(surface, current_minute, forces)
-            table.insert(surface_names, surface)
+local function load_surfaces()
+    local surfaces_string = settings.global["rd-timelapse-map-surfaces"].value
+    local surfaces = {}
+    for surface in string.gmatch(surfaces_string, "([^,;]+)", 0) do
+        if surface == "ALL" or surface == "*" then
+            for _, s in pairs(game.surfaces) do
+                table.insert(surfaces, s.name)
+            end
+            return surfaces
         end
     end
+    for surface in string.gmatch(surfaces_string, "([^,;]+)", 0) do
+        if surface ~= "" then
+            if game.surfaces[surface] ~= nil then
+                table.insert(surfaces, surface)
+            else
+                game.print({"info.rd-timelapse-map-surface-missing", surface})
+            end
+        end
+    end
+    if table_size(surfaces) == 0 then
+        game.print({"info.rd-timelapse-map-surface-missing", "ANY"})
+    end
+    return surfaces
+end
 
-    do_metadata(current_minute, surface_names, forces, captured)
+local function do_actions(event)
+    local current_minute = event.tick / ticks_per_minute
+    game.print({"info.rd-timelapse-map-snapshot-message", current_minute})
+
+    if settings.global["rd-timelapse-map-autosave"].value then
+        do_autosave(current_minute)
+    end
+
+    local forces = load_forces()
+    local surfaces = load_surfaces()
+
+    local captured = {}
+    for _, surface in ipairs(surfaces) do
+        captured[surface] = do_screenshot(surface, current_minute, forces)
+    end
+
+    do_metadata(current_minute, surfaces, forces, captured)
 end
 
 local function create_files()
