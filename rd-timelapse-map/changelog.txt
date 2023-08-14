@@ -24,3 +24,11 @@ Date: 2023-08-14
     - Revealed map mode will screenshot anything currently visible (i.e. shown by radar)
     - Support for 'ALL' and '*' in surface and force filters
 
+
+---------------------------------------------------------------------------------------------------
+Version: 1.0.3
+Date: 2023-08-14
+
+  Bugfixes:
+    - Fixed adding to a new save
+

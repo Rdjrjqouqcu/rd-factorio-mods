@@ -264,7 +264,10 @@ local function update_timers(event)
 end
 
 local function reset_timers(event)
-    local new_time = tick_to_countdown(event.tick)
+    local new_time = ""
+    if event.tick ~= nil then
+        new_time = tick_to_countdown(event.tick)
+    end
     for _, player in pairs(game.players) do
         if not settings.get_player_settings(player)["rd-timelapse-map-show-timer"].value then
             if player.gui.top[GUI_FRAME_NAME][GUI_LABEL_NAME] ~= nil then
