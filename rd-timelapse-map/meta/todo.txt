@@ -3,4 +3,5 @@
 - Always screenshot chunks once an entity has been detected
 - Investigate option to only screenshot chunks with changed entity information? Likely not reasonable
 - 10 second warning before screenshot starts
+- Test splitting screenshotting over multiple ticks to reduce lag freezes
 - 

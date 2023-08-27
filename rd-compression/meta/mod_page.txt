@@ -1,0 +1,13 @@
+## Rd's Compression
+
+Dynamically creates compressed versions of configured items to faciliate extreme bulk storage.
+
+This is based on Deep Storage Units, Deadlock's Stacking, Memory Storage, and similar storage mods.
+
+#### Work in progress
+
+Currently, there are plans to combine compression into a single composite entity that would work like a massive warehouse.
+
+
+https://github.com/Rdjrjqouqcu/rd-factorio-mods
+

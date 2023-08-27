@@ -1,0 +1,4 @@
+
+- build into composite entity
+- composite entity gui tests
+- fix item shadow
