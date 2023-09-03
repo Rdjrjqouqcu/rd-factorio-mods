@@ -5,3 +5,10 @@ Date: 2023-03-12
   Features:
     - Initial Release
 
+---------------------------------------------------------------------------------------------------
+Version: 1.0.1
+Date: 2023-09-03
+
+  Features:
+    - Added Chunk and Radar lights
+

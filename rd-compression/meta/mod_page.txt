@@ -1,6 +1,7 @@
-## Rd's Compression
+## Rd's Compression Storage
 
-Dynamically creates compressed versions of configured items to faciliate extreme bulk storage.
+Dynamically creates compressed versions of configured items to facilitate extreme bulk storage.
+This mod is very configurable, if you have any additional configuration options you'd like, please let me know.
 
 This is based on Deep Storage Units, Deadlock's Stacking, Memory Storage, and similar storage mods.
 

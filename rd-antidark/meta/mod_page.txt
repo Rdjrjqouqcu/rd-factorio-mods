@@ -1,0 +1,16 @@
+## Rd's AntiDarkness
+
+Customized lighting for my playthroughs.
+
+Provides a Chunk Light and Radar Light, which lights up the entire chunk, and the entire radar inner range, respectively.
+
+icons created by Iconic Panda - Flaticon
+Feel free to message me on discord if you have any improvements
+
+
+TODO:
+- mod recipe compat: pyanodons
+
+
+
+https://github.com/Rdjrjqouqcu/rd-factorio-mods
