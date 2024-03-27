@@ -12,3 +12,12 @@ Date: 2023-09-03
   Features:
     - Added Chunk and Radar lights
 
+---------------------------------------------------------------------------------------------------
+Version: 1.0.2
+Date: 2024-03-27
+
+  Features:
+    - Capped Chunk and Radar light now charge slowly to smooth out energy load
+    - Added support for Nullius
+    - Fixed setting minimum values
+

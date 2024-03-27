@@ -1,13 +1,14 @@
 {
   "name": "rd-antidark",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "factorio_version": "1.1",
   "title": "Rd's Anti-Darkness",
   "author": "Rdjrjqouqcu",
   "homepage": "https://discord.gg/zZ7XyDzZRy",
   "description":"Customized lighting for my playthroughs\n\nicons created by Iconic Panda - Flaticon",
   "dependencies": [
-    "base >= 0.18.0"
+    "base >= 0.18.0",
+    "? nullius >= 1.9.1"
   ]
 }
 

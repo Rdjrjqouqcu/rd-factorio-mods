@@ -1,0 +1,27 @@
+
+- add observatory to find asteroids
+- add rocket silo to mine resources from asteroids
+- add cargo drop to collect mined resources
+
+- uses for depleted asteroids?
+
+- observatory works in a form of lock on, build up charge, then lock on to an asteroids
+- once locked on, can send a scouting probe to reveal resources
+- once scouted, can send mining packs to increase resource depletion rate
+- cargo drop will deliver depleted resources similar to core miner
+- unlimited asteroids tracked, tracking information degrades over time
+
+
+
+- mod resource compatabilities
+  - vanilla
+  - nullius
+  - bob/angels?
+  - pyanodons?
+  - BL?
+
+- mod compatibilities
+  - dark matter replicators or similar
+  - uum or similar
+
+

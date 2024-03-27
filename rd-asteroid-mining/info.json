@@ -1,0 +1,13 @@
+{
+  "name": "rd-asteroid-mining",
+  "version": "1.0.0",
+  "factorio_version": "1.1",
+  "title": "Rd's Asteroid Mining",
+  "author": "Rdjrjqouqcu",
+  "homepage": "https://discord.gg/zZ7XyDzZRy",
+  "description":"Mine near planetory objects to boost resource production",
+  "dependencies": [
+    "base >= 0.18.0"
+  ]
+}
+

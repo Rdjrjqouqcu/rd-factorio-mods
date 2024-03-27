@@ -18,7 +18,7 @@ data:extend({
 		name = "rd-antidark-arealight-radius",
 		setting_type = "startup",
 		default_value = 80,
-		min_value = 0,
+		minimum_value = 0,
 		order = "b-b",
 	},
 	{
@@ -40,7 +40,7 @@ data:extend({
 		name = "rd-antidark-phantom-drain",
 		setting_type = "startup",
 		default_value = "10000",
-		min_value = 0,
+		minimum_value = 0,
 		order = "d-a",
 	},
 	{
@@ -48,8 +48,16 @@ data:extend({
 		name = "rd-antidark-phantom-drain-mult",
 		setting_type = "startup",
 		default_value = "100",
-		min_value = 0,
+		minimum_value = 0,
 		order = "d-b",
+	},
+	{
+		type = "double-setting",
+		name = "rd-antidark-charge-mult",
+		setting_type = "startup",
+		default_value = "1.0",
+		minimum_value = 1.0,
+		order = "d-c",
 	},
 	{
 		type = "bool-setting",
@@ -70,7 +78,7 @@ data:extend({
 		name = "rd-antidark-radarlight-chunkradius",
 		setting_type = "startup",
 		default_value = "3",
-		min_value = 0,
+		minimum_value = 0,
 		order = "f-b",
 	},
 })

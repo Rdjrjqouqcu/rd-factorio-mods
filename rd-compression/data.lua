@@ -212,6 +212,25 @@ local research = {
   prerequisites = {"automation-2"},
 }
 
+if mods["nullius"] then
+  recipe_compressor.order = "nullius-" .. recipe_compressor.name
+  recipe_decompressor.order = "nullius-" .. recipe_decompressor.name
+  recipe_compressor.ingredients = {
+    {"nullius-steel-beam", 10},
+    {"nullius-medium-assembler-1", 1},
+    {"nullius-medium-furnace-1", 1},
+
+  }
+  recipe_decompressor.ingredients = recipe_compressor.ingredients
+  recipe_compressor.category = "large-crafting"
+  recipe_decompressor.category = "large-crafting"
+  research.order = "nullius-" .. research.name
+  research.unit = data.raw["technology"]["nullius-mass-production-2"].unit
+  research.prerequisites = {
+    "nullius-mass-production-2",
+  }
+end
+
 data:extend{
   recipe_category_compression,
   recipe_category_decompression,

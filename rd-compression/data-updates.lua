@@ -18,6 +18,9 @@ local levels = settings.startup["rd-compression-levels"].value
 local speed_growth = settings.startup["rd-compression-speed-multiplier"].value
 local speed_base = settings.startup["rd-compression-speed-base"].value / speed_growth
 
+-- For debugging
+local hide_from_player = true
+
 local function build_items(item_name)
   local item = data.raw["item"][item_name]
   if item == nil then
@@ -67,15 +70,16 @@ local function build_items(item_name)
       end
     end
     -- Add compressed item
+    local count = stack_setting(item.stack_size)
     table.insert(results, {
       type = "item",
       name = "rd-compressed-"..i.."-"..item_name,
       icons = icons,
       group = "rd-compressed",
       order = "z",
-      stack_size = item.stack_size,
+      stack_size = count,
       localised_name = {"meta.rd-compression", i, item.localised_name or {"item-name."..item_name}},
-      localised_description = {"meta.rd-compression-desc", stack_setting(item.stack_size)^i, item.localised_name or {"item-name."..item_name}},
+      localised_description = {"meta.rd-compression-desc", count^i, item.localised_name or {"item-name."..item_name}},
     })
     if i == 1 then
       -- Add recipes converting to source item
@@ -83,28 +87,28 @@ local function build_items(item_name)
         type = "recipe",
         name = "rd-compress-"..i.."-"..item_name,
         enabled = true,
-        hide_from_player_crafting = true,
+        hide_from_player_crafting = hide_from_player,
         energy_required = speed_base * (speed_growth^i),
         ingredients = {
-          {type = "item", name = item_name, amount = stack_setting(item.stack_size)}
+          {type = "item", name = item_name, amount = count}
         },
         category = "rd-compression",
         results = {{type = "item", name = "rd-compressed-"..i.."-"..item_name, amount = 1}},
       })
       table.insert(results, {
         type = "recipe",
-        name = "rd-decompress"..i.."-"..item_name,
+        name = "rd-decompress-"..i.."-"..item_name,
         main_product = item_name,
         enabled = true,
-        hide_from_player_crafting = true,
+        hide_from_player_crafting = hide_from_player,
         energy_required = speed_base * (speed_growth^i),
         ingredients = {
           {type = "item", name = "rd-compressed-"..i.."-"..item_name, amount = 1}
         },
         category = "rd-decompression",
         results = {
-          {type = "item", name = item_name, amount = math.ceil(stack_setting(item.stack_size) / 2)},
-          {type = "item", name = item_name, amount = math.floor(stack_setting(item.stack_size) / 2)},
+          {type = "item", name = item_name, amount = math.ceil(count / 2)},
+          {type = "item", name = item_name, amount = math.floor(count / 2)},
         },
       })
     else
@@ -113,28 +117,28 @@ local function build_items(item_name)
         type = "recipe",
         name = "rd-compress-"..i.."-"..item_name,
         enabled = true,
-        hide_from_player_crafting = true,
+        hide_from_player_crafting = hide_from_player,
         energy_required = speed_base * (speed_growth^i),
         ingredients = {
-          {type = "item", name = "rd-compressed-"..(i-1).."-"..item_name, amount = stack_setting(item.stack_size)}
+          {type = "item", name = "rd-compressed-"..(i-1).."-"..item_name, amount = count}
         },
         category = "rd-compression",
         results = {{type = "item", name = "rd-compressed-"..i.."-"..item_name, amount = 1}},
       })
       table.insert(results, {
         type = "recipe",
-        name = "rd-decompress"..i.."-"..item_name,
+        name = "rd-decompress-"..i.."-"..item_name,
         main_product = "rd-compressed-"..(i-1).."-"..item_name,
         enabled = true,
-        hide_from_player_crafting = true,
+        hide_from_player_crafting = hide_from_player,
         energy_required = speed_base * (speed_growth^i),
         ingredients = {
           {type = "item", name = "rd-compressed-"..i.."-"..item_name, amount = 1}
         },
         category = "rd-decompression",
         results = {
-          {type = "item", name = "rd-compressed-"..(i-1).."-"..item_name, amount = math.ceil(stack_setting(item.stack_size) / 2)},
-          {type = "item", name = "rd-compressed-"..(i-1).."-"..item_name, amount = math.floor(stack_setting(item.stack_size) / 2)},
+          {type = "item", name = "rd-compressed-"..(i-1).."-"..item_name, amount = math.ceil(count / 2)},
+          {type = "item", name = "rd-compressed-"..(i-1).."-"..item_name, amount = math.floor(count / 2)},
         },
       })
     end
@@ -143,10 +147,27 @@ local function build_items(item_name)
 end
 
 local items_string = settings.startup["rd-compression-items"].value
+
+if items_string == "" then
+  if mods["nullius"] then
+    items_string = "iron-ore, nullius-bauxite, nullius-limestone, nullius-sandstone"
+  else
+    items_string = "coal, stone, iron-ore, copper-ore, uranium-ore"
+  end
+end
+
 for item in string.gmatch(items_string, "([^,;]+)", 0) do
     if item ~= "" then
       item = string.match(item, "^%s*(.-)%s*$" )
-      data:extend(build_items(item))
+      local items = build_items(item)
+      if mods["nullius"] then
+        for _, item in pairs(items) do
+          if item.type == "recipe" then
+            item.order = "nullius-include"
+          end
+        end
+      end
+      data:extend(items)
     end
 end
 

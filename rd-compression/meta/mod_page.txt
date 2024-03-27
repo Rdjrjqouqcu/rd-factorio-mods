@@ -5,6 +5,13 @@ This mod is very configurable, if you have any additional configuration options 
 
 This is based on Deep Storage Units, Deadlock's Stacking, Memory Storage, and similar storage mods.
 
+### Current Modpack Support
+
+| Modpack | Defaults |
+| :------ | :------- |
+| vanilla | coal, stone, iron-ore, copper-ore, uranium-ore |
+| [nullius](https://mods.factorio.com/mod/nullius) | iron-ore, nullius-bauxite, nullius-limestone, nullius-sandstone |
+
 #### Work in progress
 
 Currently, there are plans to combine compression into a single composite entity that would work like a massive warehouse.

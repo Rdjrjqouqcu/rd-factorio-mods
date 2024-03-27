@@ -12,5 +12,9 @@ TODO:
 - mod recipe compat: pyanodons
 
 
+### Current Recipe Compatibility Support
+
+- [nullius](https://mods.factorio.com/mod/nullius)
+
 
 https://github.com/Rdjrjqouqcu/rd-factorio-mods

@@ -18,6 +18,9 @@ local research = {
 --
 
 local area_enabled = settings.startup["rd-antidark-arealight-enabled"].value
+if mods["nullius"] then
+  area_enabled = false
+end
 
 if area_enabled then
   local item_area_light = {
@@ -177,6 +180,16 @@ if solar_enabled then
     }
   end
 
+  if mods["nullius"] then
+    recipe_solar_light.order = "nullius-bda"
+    recipe_solar_light.subgroup = "railway"
+    recipe_solar_light.ingredients = {
+      { "nullius-lamp-2",     1 },
+      { "electronic-circuit", 2 },
+      { "solar-panel",        1 },
+    }
+  end
+
   table.insert(research.effects, { type = "unlock-recipe", recipe = "ad-solar-light" })
   data:extend {
     item_solar_light,
@@ -193,9 +206,12 @@ local lights_per_chunk = 4
 
 local energy_J_s = settings.startup["rd-antidark-phantom-drain"].value
 local initial_energy_multiplier = settings.startup["rd-antidark-phantom-drain-mult"].value
+local input_multiplier = settings.startup["rd-antidark-charge-mult"].value
 local buffer_per_chunk = (lights_per_chunk + 1) * initial_energy_multiplier * energy_J_s
+local input_per_chunk = (lights_per_chunk + 1) * energy_J_s * input_multiplier
 local chunk_radius = settings.startup["rd-antidark-radarlight-chunkradius"].value
 local buffer_per_radar = ((2 * chunk_radius + 1) ^ 2 * lights_per_chunk + 1) * initial_energy_multiplier * energy_J_s
+local input_per_radar = ((2 * chunk_radius + 1) ^ 2 * lights_per_chunk + 1) * energy_J_s * input_multiplier
 
 local chunk_enabled = settings.startup["rd-antidark-chunklight-enabled"].value
 
@@ -231,7 +247,8 @@ if chunk_enabled then
     energy_source = {
       type = "electric",
       buffer_capacity = buffer_per_chunk .. "J",
-      usage_priority = "secondary-input"
+      usage_priority = "secondary-input",
+      input_flow_limit = input_per_chunk .. "W"
     },
     energy_production = "0W",
     energy_usage = "0W",
@@ -256,6 +273,15 @@ if chunk_enabled then
       "player-creation",
     },
   }
+
+  if mods["nullius"] then
+    recipe_chunk_light.order = "nullius-bdb"
+    recipe_chunk_light.subgroup = "railway"
+    recipe_chunk_light.ingredients = {
+      { "nullius-lamp-2",     4 },
+      { "electronic-circuit", 10 },
+    }
+  end
 
   table.insert(research.effects, { type = "unlock-recipe", recipe = "ad-chunk-light" })
   data:extend {
@@ -329,7 +355,8 @@ if radar_enabled then
     energy_source = {
       type = "electric",
       buffer_capacity = buffer_per_radar .. "J",
-      usage_priority = "secondary-input"
+      usage_priority = "secondary-input",
+      input_flow_limit = input_per_radar .. "W"
     },
     energy_production = "0W",
     energy_usage = "0W",
@@ -366,6 +393,11 @@ if radar_enabled then
     },
   }
 
+  if mods["nullius"] then
+    recipe_radar_light.order = "nullius-bdc"
+    recipe_radar_light.subgroup = "railway"
+  end
+
   table.insert(research.effects, { type = "unlock-recipe", recipe = "ad-radar-light" })
   data:extend {
     item_radar_light,
@@ -378,12 +410,22 @@ end
 -- REGISTER
 --
 
+if mods["nullius"] then
+  research.order = "nullius-" .. research.name
+  research.prerequisites = {"nullius-illumination-2"}
+  research.unit = data.raw["technology"]["nullius-illumination-2"].unit
+end
+
 if separate_research then
   data:extend {
     research,
   }
 else
+  local base_tech = "optics"
+  if mods["nullius"] then
+    base_tech = "nullius-illumination-2"
+  end
   for _, v in pairs(research.effects) do
-    table.insert(data.raw["technology"]["optics"].effects, v)
+    table.insert(data.raw["technology"][base_tech].effects, v)
   end
 end
