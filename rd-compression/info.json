@@ -1,6 +1,6 @@
 {
   "name": "rd-compression",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "factorio_version": "1.1",
   "title": "Rd's Compression Storage",
   "author": "Rdjrjqouqcu",
@@ -8,7 +8,9 @@
   "description":"Compresses resources to allow for massively bulk storage.\n\nThis will eventually look like type specific warehouses without an insertion performance penalty.\n\nicons created by Freepik - JunGSa",
   "dependencies": [
     "base >= 0.18.0",
-    "? nullius >= 1.9.1"
+    "? nullius >= 1.9.1",
+    "? pyrawores",
+    "(?) pypostprocessing"
   ]
 }
 

@@ -151,6 +151,8 @@ local items_string = settings.startup["rd-compression-items"].value
 if items_string == "" then
   if mods["nullius"] then
     items_string = "iron-ore, nullius-bauxite, nullius-limestone, nullius-sandstone"
+  elseif mods["pyrawores"] then
+    items_string = "stone, nexelit-ore, raw-borax, sulfur, kimberlite-rock, molybdenum-ore, regolite-rock, native-flora, phosphate-rock, kerogen, oil-sand, raw-coal, copper-ore, iron-ore, uranium-ore, antimonium-ore, niobium-ore, rare-earth-ore, salt, ore-aluminium, ore-chromium, ore-lead, ore-nickel, ore-quartz, ore-tin, ore-titanium, ore-zinc"
   else
     items_string = "coal, stone, iron-ore, copper-ore, uranium-ore"
   end

@@ -11,10 +11,12 @@ This is based on Deep Storage Units, Deadlock's Stacking, Memory Storage, and si
 | :------ | :------- |
 | vanilla | coal, stone, iron-ore, copper-ore, uranium-ore |
 | [nullius](https://mods.factorio.com/mod/nullius) | iron-ore, nullius-bauxite, nullius-limestone, nullius-sandstone |
+| [Pymods](https://mods.factorio.com/mod/pyrawores) | stone, nexelit-ore, raw-borax, sulfur, kimberlite-rock, molybdenum-ore, regolite-rock, native-flora, phosphate-rock, kerogen, oil-sand, raw-coal, copper-ore, iron-ore, uranium-ore, antimonium-ore, niobium-ore, rare-earth-ore, salt, ore-aluminium, ore-chromium, ore-lead, ore-nickel, ore-quartz, ore-tin, ore-titanium, ore-zinc |
 
 #### Work in progress
 
 Currently, there are plans to combine compression into a single composite entity that would work like a massive warehouse.
+Alternatively, these compressed items will not be able to be transported.
 
 
 https://github.com/Rdjrjqouqcu/rd-factorio-mods

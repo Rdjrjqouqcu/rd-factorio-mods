@@ -12,3 +12,10 @@ Date: 2024-03-27
   Features:
     - Updated compressed stack size to use compression mode, so one stack less-compressed = 1 stack compressed
     - Added support for Nullius
+
+---------------------------------------------------------------------------------------------------
+Version: 1.0.2
+Date: 2024-05-17
+
+  Features:
+    - Added support for Pymods
