@@ -67,7 +67,8 @@ local recipe_solid_mixer = {
     {"assembling-machine-1", 1},
     {"steel-furnace", 1},
   },
-  result = "fuelmixer-solid",
+  results = {{type="item", name="fuelmixer-solid", amount=1}},
+  auto_recycle = false,
 }
 
 local recipe_solid_mix = {
@@ -77,7 +78,8 @@ local recipe_solid_mix = {
   energy_required = 1,
   ingredients = {},
   category = "fuel-mixing",
-  result = "fuelmix-solid",
+  results = {{type="item", name="fuelmix-solid", amount=1}},
+  auto_recycle = false,
 }
 
 local entity_solid_mixer = {
@@ -94,9 +96,9 @@ local entity_solid_mixer = {
   energy_source = {
     type = "burner",
     render_no_power_icon = display_outoffuel,
-    emissions_per_minute = 4,
+    emissions_per_minute = { pollution = 4 },
     fuel_inventory_size = 4,
-    fuel_category = "chemical",
+    fuel_categories = {"chemical"},
     light_flicker = {
       minimum_light_size = 1,
       light_intensity_to_size_coefficient = 0.2,
@@ -107,16 +109,18 @@ local entity_solid_mixer = {
   },
   energy_usage = (solid_mix_amount * settings.startup["rd-fuelmix-solid-fuelrequired"].value) .. "MW",
   allowed_effects = { "pollution"},
-  animation = {
-    layers = {
-      {
-        filename = "__rd-fuelmix__/graphics/mixer-solid.png",
-        frame_count = 1,
-        width = 512,
-        height = 512,
-        -- 3 tiles = 96 pixels
-        scale = (96 - 6) / 512,
-      },
+  graphics_set = {
+    animation = {
+      layers = {
+        {
+          filename = "__rd-fuelmix__/graphics/mixer-solid.png",
+          frame_count = 1,
+          width = 512,
+          height = 512,
+          -- 3 tiles = 96 pixels
+          scale = (96 - 6) / 512,
+        },
+      }
     }
   },
 
@@ -142,7 +146,7 @@ local entity_solid_mixer = {
   selection_box = { { -1.5, -1.5 }, { 1.5, 1.5 } },
   working_sound = {
     sound = {
-      filename = "__base__/sound/burner-mining-drill.ogg",
+      filename = "__base__/sound/burner-mining-drill-1.ogg",
       volume = 0.8
     }
   },
@@ -189,7 +193,8 @@ local recipe_fluid_mixer = {
     {"storage-tank", 1},
     {"boiler", 1},
   },
-  result = "fuelmixer-fluid",
+  results = {{type="item", name="fuelmixer-fluid", amount=1}},
+  auto_recycle = false,
 }
 
 local recipe_fluid_mix = {
@@ -200,6 +205,7 @@ local recipe_fluid_mix = {
   ingredients = {},
   category = "fuel-mixing",
   results = {{type="fluid", name="fuelmix-fluid", amount=1}},
+  auto_recycle = false,
 }
 
 local entity_fluid_mixer = {
@@ -220,12 +226,11 @@ local entity_fluid_mixer = {
       production_type = "input",
       pipe_picture = assembler2pipepictures(),
       pipe_covers = pipecoverspictures(),
-      base_area = 1,
-      base_level = -1,
-      pipe_connections = {{ type="input", position = {0, -2} }},
-      secondary_draw_orders = { north = -1 }
+      pipe_connections = {{ fluid_direction="input", position = {0, -1}, direction = 0 }},
+      secondary_draw_orders = { north = -1 },
+      volume = 200
     },
-    emissions_per_minute = 4,
+    emissions_per_minute = { pollution = 4 },
     burns_fluid = true,
     scale_fluid_usage = true,
     light_flicker = {
@@ -242,24 +247,25 @@ local entity_fluid_mixer = {
       production_type = "output",
       pipe_picture = assembler2pipepictures(),
       pipe_covers = pipecoverspictures(),
-      base_area = 1,
-      base_level = 1,
-      pipe_connections = {{ type="output", position = {0, 2} }},
-      secondary_draw_orders = { north = -1 }
+      pipe_connections = {{ fluid_direction="output", position = {0, 1}, direction = 8 }},
+      secondary_draw_orders = { north = -1 },
+      volume = 200
     },
 
   },
   allowed_effects = { "pollution"},
-  animation = {
-    layers = {
-      {
-        filename = "__rd-fuelmix__/graphics/mixer-fluid.png",
-        frame_count = 1,
-        width = 512,
-        height = 512,
-        -- 3 tiles = 96 pixels
-        scale = (96 - 6) / 512,
-      },
+  graphics_set = {
+    animation = {
+      layers = {
+        {
+          filename = "__rd-fuelmix__/graphics/mixer-fluid.png",
+          frame_count = 1,
+          width = 512,
+          height = 512,
+          -- 3 tiles = 96 pixels
+          scale = (96 - 6) / 512,
+        },
+      }
     }
   },
 
@@ -285,7 +291,7 @@ local entity_fluid_mixer = {
   selection_box = { { -1.5, -1.5 }, { 1.5, 1.5 } },
   working_sound = {
     sound = {
-      filename = "__base__/sound/burner-mining-drill.ogg",
+      filename = "__base__/sound/burner-mining-drill-1.ogg",
       volume = 0.8
     }
   },
