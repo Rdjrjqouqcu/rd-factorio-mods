@@ -1,0 +1,18 @@
+
+- Re-implement more modularly
+
+
+
+- Team management
+  - Permission levels:
+    - Game Admin: Owner level for all teams, can modify evolution/pollution levels
+    - Owner: manage perms, transfer to other player
+    - Manager: manage perms
+    - Trusted: add/remove players
+    - Member: nothing
+- Override world start
+- Prevent team offline activity
+- Fake pollution mechanic
+
+
+

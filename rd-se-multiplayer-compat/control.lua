@@ -1,143 +1,10 @@
-local LOBBY_RADIUS = 42
-local LOBBY_WATER_GAP = 10
-local LOBBY_LOCATION = {x=0,y=0}
-local LOBBY_AREA = {
-    left_top = { x = LOBBY_LOCATION["x"] - LOBBY_RADIUS, y = LOBBY_LOCATION["y"] - LOBBY_RADIUS},
-    right_bottom = { x = LOBBY_LOCATION["x"] + LOBBY_RADIUS, y = LOBBY_LOCATION["y"] + LOBBY_RADIUS},
-}
+local lobby = require "lobby"
+local util = require "util"
 
-local ADMIN_DEBUG = settings.startup["rd-sem-admin-debug"].value
+
 local REQUIRE_PERMS = settings.startup["rd-sem-require-perms"].value
 local CRASHSITE_ITEMS = settings.startup["rd-sem-crashsite-items"].value
 local WORM_KILL_RATE = settings.startup["rd-sem-worm-kill"].value
-
-
-local function starts_with(base, search)
-    return string.sub(base,1,string.len(search))==search
-end
-
-local function get_remainder(base, search)
-    return string.sub(base, 1 + string.len(search))
-end
-
-local function announce(msg)
-    game.print(msg)
-end
-
-local function admin_announce(msg)
-    for _, player in pairs(game.players) do
-        if player.admin and ADMIN_DEBUG then
-            player.print("[A]: "..msg)
-        end
-    end
-end
-
-local function isFactionActive(faction)
-    if type(faction) == "string" then
-        faction = game.forces[faction]
-    end
-    local active = false
-    for _,player in pairs(global.all_player_forces[faction.name].players) do
-        active = active or game.players[player].connected
-    end
-    -- return global.debug
-    return active
-end
-
-local function tableLength(table)
-    local count = 0
-    for _ in pairs(table) do count = count + 1 end
-    return count
-end
-
-local function generate_lobby()
-    if global.lobby_generated then
-        return
-    end
-    admin_announce("generating lobby")
-    global.lobby_generated = true
-    game.map_settings.enemy_evolution.enabled = false
-
-    local surface = game.surfaces['nauvis']
-    surface.always_day=true
-    surface.destroy_decoratives(LOBBY_AREA)
-    for _,entity in pairs(surface.find_entities_filtered({force='enemy'})) do
-        entity.destroy()
-    end
-
-    game.forces['player'].set_spawn_position(LOBBY_LOCATION, surface)
-
-    -- create planet enemy forces
-
-	game.create_force("no_evolution")
-	local force = game.forces["no_evolution"]
-    force.ai_controllable = true 
-    force.evolution_factor = 0
-
-	game.create_force("low_evolution")
-	local force = game.forces["low_evolution"]
-    force.ai_controllable = true 
-    force.evolution_factor = 0.25
-
-	game.create_force("medium_evolution")
-	local force = game.forces["medium_evolution"]
-    force.ai_controllable = true 
-    force.evolution_factor = 0.5
-
-	game.create_force("high_evolution")
-	local force = game.forces["high_evolution"]
-    force.ai_controllable = true 
-    force.evolution_factor = 0.75
-
-	game.create_force("max_evolution")
-	local force = game.forces["max_evolution"]
-	force.ai_controllable = true 
-    force.evolution_factor = 1.0
-
-	local force = game.forces["enemy"]
-    force.evolution_factor = 1.0
-
-    -- Build starting circle
-    local start_tiles = {}
-    for i=LOBBY_AREA.left_top.x,LOBBY_AREA.right_bottom.x,1 do
-        for j=LOBBY_AREA.left_top.y,LOBBY_AREA.right_bottom.y,1 do
-
-            local dist_origin = (LOBBY_LOCATION.x - i) ^ 2 + (LOBBY_LOCATION.y - j) ^ 2
-
-            if (dist_origin <= (LOBBY_RADIUS - LOBBY_WATER_GAP) ^ 2) then
-                table.insert(start_tiles, {name = 'tutorial-grid', position ={i,j}})
-            end
-            if ((LOBBY_RADIUS - LOBBY_WATER_GAP) ^ 2 < dist_origin and dist_origin  < LOBBY_RADIUS ^ 2) then
-                table.insert(start_tiles, {name = 'out-of-map', position ={i,j}})
-            end
-        end
-    end
-    surface.set_tiles(start_tiles)
-
-    -- clean starting circle
-    for key, entity in pairs(surface.find_entities_filtered({area=LOBBY_AREA})) do
-        if entity.valid and entity and entity.position then
-            if ((LOBBY_LOCATION.x - entity.position.x)^2 + (LOBBY_LOCATION.y - entity.position.y)^2 < LOBBY_RADIUS^2) then
-                if entity.type == "character" then
-                    -- skip characters
-                else
-                    entity.destroy()
-                end
-            end
-        end
-    end
-    admin_announce("lobby generated")
-end
-
-local function formattime_hours_mins(ticks)
-    local total_seconds = math.floor(ticks / 60)
-    local seconds = total_seconds % 60
-    local total_minutes = math.floor((total_seconds)/60)
-    local minutes = total_minutes % 60
-    local hours   = math.floor((total_minutes)/60)
-
-    return string.format("%dh:%02dm:%02ds", hours, minutes, seconds)
-end
 
 local function showSpawnGui(player)
 	if(player.gui.screen.spawn_gui ~= nil) then
@@ -178,7 +45,7 @@ local function createContainer(player)
             player.gui.top.rd_container.button_menu.toggle_spawn_gui.visible = false
         end
 
-        if ADMIN_DEBUG and player.admin then
+        if util.ADMIN_DEBUG and player.admin then
             local debug = button_menu.add{name="debug",type="button", caption="Debug"}
             debug.style["padding"]=0
         end
@@ -186,11 +53,11 @@ local function createContainer(player)
 end
 
 local function on_create_player(event)
-    generate_lobby()
+    lobby.generate_lobby()
     local player = game.players[event.player_index]
     global.death_counter[player.name] = 0
-	player.teleport(LOBBY_LOCATION, game.surfaces['nauvis'])
-    announce((player.name).." just spawned!")
+	player.teleport(lobby.LOBBY_LOCATION, game.surfaces['nauvis'])
+    util.announce((player.name).." just spawned!")
     createContainer(player)
 end
 
@@ -210,7 +77,7 @@ local function on_chunk_gen(e)
             "max_evolution",
         }
         global.surface_enemy_force[surface.name] = forces[math.floor(math.random() * 5) + 1]
-        admin_announce("assigned "..global.surface_enemy_force[surface.name].." to "..surface.name)
+        util.admin_announce("assigned "..global.surface_enemy_force[surface.name].." to "..surface.name)
     end
     for _,entity in pairs(surface.find_entities_filtered({force='enemy',area=e.area})) do
         entity.force = global.surface_enemy_force[surface.name]
@@ -227,7 +94,7 @@ end
 
 local function addPlayerToEmpire(player, playerForce)
     player.gui.top.rd_container.button_menu.toggle_spawn_gui.visible = false
-    announce(player.name.." joined team "..playerForce.name)
+    util.announce(player.name.." joined team "..playerForce.name)
     player.force = playerForce
     local force_info = global.all_player_forces[playerForce.name]
     table.insert(force_info.players, player.name)
@@ -236,18 +103,18 @@ end
 
 local function createPlayerEmpire(player)
     if player.force.name ~= "player" then
-        admin_announce("empire already created")
+        util.admin_announce("empire already created")
         return true
     end
     if tableLength(game.forces) > 62 then
-        announce("there can't be more than 30 players due to the factorio force amount limitation! "..player.name.." has to join a team")
+        util.announce("there can't be more than 30 players due to the factorio force amount limitation! "..player.name.." has to join a team")
         return false
     end
-    announce((player.name).." just created a new Empire! expect some lag")
+    util.announce((player.name).." just created a new Empire! expect some lag")
     remote.call("space-exploration", "setup_multiplayer_test", { force_name = player.name, players = {player}, match_nauvis_seed = false})
     local new_surface = player.surface
     if new_surface.name == "Nauvis" then
-        admin_announce("unknown issue, aborting")
+        util.admin_announce("unknown issue, aborting")
         return false
     end
 	local enemy_force = ('enemy='..(player.name))
@@ -263,10 +130,10 @@ local function createPlayerEmpire(player)
         player_force_entry.evo[k] = v
     end
     global.all_player_forces[player.force.name] = player_force_entry
-    admin_announce("entry: "..game.table_to_json(player_force_entry))
+    util.admin_announce("entry: "..game.table_to_json(player_force_entry))
     
     global.surface_enemy_force[new_surface.name] = enemy_force
-    admin_announce("assigned "..global.surface_enemy_force[new_surface.name].." to "..new_surface.name)
+    util.admin_announce("assigned "..global.surface_enemy_force[new_surface.name].." to "..new_surface.name)
     
     local change_forces = {
         "no_evolution",
@@ -365,9 +232,9 @@ local function protectForce(playerForce)
     local protect = not isFactionActive(playerForce)
     local surface = game.surfaces[force_info.surface]
     if protect then
-        admin_announce("protection for "..playerForce.name.." set to True on "..surface.name)
+        util.admin_announce("protection for "..playerForce.name.." set to True on "..surface.name)
     else
-        admin_announce("protection for "..playerForce.name.." set to False on "..surface.name)
+        util.admin_announce("protection for "..playerForce.name.." set to False on "..surface.name)
     end
     local enemy_force = game.forces[force_info.enemy]
     enemy_force.set_cease_fire(playerForce, protect)
@@ -629,10 +496,13 @@ local function on_init()
     -- surface_enemy_force[surface_name] = enemy_name
 	global.surface_enemy_force = {}
 
+    -- surface_player_force[surface_name] = force_name
+    global.surface_player_force = {}
+
+    
+
     -- structured as the following:
     -- all_player_forces[force_name]
-    --      ["players"] = {player_names}
-    --      ["surface"] = surface_name
     --      ["enemy"] = enemy_name
     --      ["evo"] :=
     --          ["time"] = time_factor
@@ -658,7 +528,7 @@ local function on_init()
     remote.call("freeplay", "set_skip_intro", true)
 
     if script.active_mods["Krastorio2"] then
-        remote.call("kr-crash-site", "crash_site_enabled", false)
+        -- remote.call("kr-crash-site", "crash_site_enabled", false)
     end
 
     remote.add_interface("rd-sem", { allow_aai_crash_sequence = function(data) return {allow = false, weight = 10} end})
@@ -681,13 +551,13 @@ local function init()
         local cause = get_cause_name(event.cause, died_player)
         global.death_counter[player_name] = global.death_counter[player_name] + 1
         if global.death_counter[player_name] == 1 then
-            announce("Alert: "..player_name.." died for the first time to "..cause)
+            util.announce("Alert: "..player_name.." died for the first time to "..cause)
         elseif global.death_counter[player_name] == 2 then
-            announce("Alert: "..player_name.." died for the second time to "..cause)
+            util.announce("Alert: "..player_name.." died for the second time to "..cause)
         elseif global.death_counter[player_name] == 3 then
-            announce("Alert: "..player_name.." died for the third time to "..cause)
+            util.announce("Alert: "..player_name.." died for the third time to "..cause)
         else
-            announce("Alert: "..player_name.." died for the "..tostring(global.death_counter[player_name]).."th time to "..cause)
+            util.announce("Alert: "..player_name.." died for the "..tostring(global.death_counter[player_name]).."th time to "..cause)
         end
     end)
 
@@ -733,7 +603,7 @@ local function init()
             local force_name = get_remainder(event.element.name,"pollution_input=")
             settings.evo[force_name].pollution = tonumber(event.text)
         end
-        admin_announce("settings changed by "..player.name.." to "..game.table_to_json(settings))
+        util.admin_announce("settings changed by "..player.name.." to "..game.table_to_json(settings))
     end)
 
     script.on_event(defines.events.on_gui_click, function(event)
@@ -757,7 +627,7 @@ local function init()
             -- request to join
             local host_player = game.players[string.sub(event.element.name, 1 + string.len("join="))]
 			if(host_player ~= nil and host_player.connected) then
-				admin_announce((player.name).." wants to join team "..(host_player.force.name))
+				util.admin_announce((player.name).." wants to join team "..(host_player.force.name))
 				askToJoin(host_player, player)
 				player.gui.screen.spawn_gui.destroy()
 			else
@@ -781,13 +651,13 @@ local function init()
             if player.admin then
                 global.debug = not global.debug
                 if global.debug then
-                    admin_announce("global debug now true")
+                    util.admin_announce("global debug now true")
                 else
-                    admin_announce("global debug now false")
+                    util.admin_announce("global debug now false")
                 end
             end
         else
-            -- admin_announce(event.element.name)
+            -- util.admin_announce(event.element.name)
         end
     end)
 end
