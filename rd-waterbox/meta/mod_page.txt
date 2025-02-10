@@ -1,0 +1,10 @@
+
+
+Explosive waterboxes create water when destroyed or rotated.
+
+Can be configured to work on specific surfaces.
+
+Based on [Waterboxes](https://mods.factorio.com/mod/Waterboxes)
+
+
+https://github.com/Rdjrjqouqcu/rd-factorio-mods

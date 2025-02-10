@@ -1,0 +1,19 @@
+
+
+Mix fuels together to get standardized fuel.
+Optionally, for more efficiency.
+
+This mod is meant to simplify burnable fuel overflow systems by allowing all fuels to be processed to a single fuel mix.
+For example, all of Pyanodon's burnable fluids can be converted into fuel mix, which has the same burn value.
+
+icons created by Freepik - Flaticon
+Feel free to message me on discord if you have any improvements
+
+### TODO
+- Get better icons/add animations
+- Disallow both fuel-mixes from being used in the fuel mixer
+- High Throughput mixers that can output more than 1 unit per tick
+- Fluid Fuel Mixer that has a built in overflow valve 
+
+
+https://github.com/Rdjrjqouqcu/rd-factorio-mods
