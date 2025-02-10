@@ -13,4 +13,12 @@ data:extend({
 		default_value = false,
 		order = "b",
 	},
+	{
+		type = "string-setting",
+		name = "rd-waterbox-valid-surfaces",
+		setting_type = "startup",
+		default_value = "nauvis, fulgora, vulcanus, gleba, aquilo",
+		allow_blank = true,
+		order = "c",
+	}
 })

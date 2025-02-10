@@ -1,13 +1,12 @@
 {
   "name": "rd-waterbox",
-  "version": "0.0.1",
-  "factorio_version": "1.1",
+  "version": "0.1.0",
+  "factorio_version": "2.0",
   "title": "Rd's Waterboxes",
   "author": "Rdjrjqouqcu",
   "homepage": "https://discord.gg/zZ7XyDzZRy",
-  "description":"Explosive waterboxes create water when destroyed or rotated\nBased on https://mods.factorio.com/mod/Waterboxes",
+  "description": "Explosive waterboxes create water when destroyed or rotated\nCan be configured to work on specified surfaces.\n\nBased on https://mods.factorio.com/mod/Waterboxes",
   "dependencies": [
-    "base >= 0.18.0"
+    "base >= 2.0.0"
   ]
 }
-
