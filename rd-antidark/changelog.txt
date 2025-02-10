@@ -21,3 +21,11 @@ Date: 2024-03-27
     - Added support for Nullius
     - Fixed setting minimum values
 
+---------------------------------------------------------------------------------------------------
+Version: 1.1.0
+Date: 2025-02-09
+
+  Features:
+    - Updated for 2.0
+    - Added recipe support for Pyanodons
+    - Added support for quality chunk and radar lights

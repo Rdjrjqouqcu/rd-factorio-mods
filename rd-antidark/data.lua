@@ -1,3 +1,24 @@
+local light_pick_sound = {
+  filename = "__base__/sound/item/electric-small-inventory-pickup.ogg",
+  volume = 0.7,
+  aggregation = { max_count = 1, remove = true },
+}
+local light_drop_sound = {
+  filename = "__base__/sound/item/electric-small-inventory-move.ogg",
+  volume = 1.0,
+  aggregation = { max_count = 1, remove = true },
+}
+local heavy_pick_sound = {
+  filename = "__base__/sound/item/metal-large-inventory-pickup.ogg",
+  volume = 0.8,
+  aggregation = { max_count = 1, remove = true },
+}
+local heavy_drop_sound = {
+  filename = "__base__/sound/item/metal-large-inventory-move.ogg",
+  volume = 0.7,
+  aggregation = { max_count = 1, remove = true },
+}
+
 local separate_research = settings.startup["rd-antidark-separate-research"].value
 
 local research = {
@@ -8,9 +29,9 @@ local research = {
   -- Prototype/Technology
   icon = "__rd-antidark__/graphics/bulb-on.png",
   icon_size = 512,
-  unit = data.raw["technology"]["optics"]["unit"],
+  unit = data.raw["technology"]["lamp"]["unit"],
   effects = {},
-  prerequisites = { "optics" },
+  prerequisites = { "lamp" },
 }
 
 --
@@ -32,6 +53,9 @@ if area_enabled then
     order = "a[light]-a[small-lamp]-a[ad-area-light]",
     place_result = "ad-area-light",
     stack_size = 50,
+    pick_sound = light_pick_sound,
+    drop_sound = light_drop_sound,
+    weight = 20000,
   }
 
   local recipe_area_light = {
@@ -39,10 +63,10 @@ if area_enabled then
     name = "ad-area-light",
     enabled = false,
     ingredients = {
-      { "small-lamp",         4 },
-      { "electronic-circuit", 2 },
+      { type = "item", name = "small-lamp",         amount = 4 },
+      { type = "item", name = "electronic-circuit", amount = 2 },
     },
-    result = "ad-area-light",
+    results = { { type = "item", name = "ad-area-light", amount = 1 } },
   }
 
   local entity_area_light = {
@@ -91,6 +115,15 @@ if area_enabled then
   data.raw["lamp"]["small-lamp"].next_upgrade = "ad-area-light"
   data.raw["lamp"]["small-lamp"].fast_replaceable_group = "lamp-small"
 
+  if mods["pyhightech"] then
+    recipe_area_light.ingredients = {
+      { type = "item", name = "small-lamp",   amount = 4 },
+      { type = "item", name = "copper-cable", amount = 6 },
+      { type = "item", name = "iron-plate",   amount = 2 },
+      { type = "item", name = "copper-plate", amount = 2 },
+    }
+  end
+
   table.insert(research.effects, { type = "unlock-recipe", recipe = "ad-area-light" })
   data:extend {
     item_area_light,
@@ -115,6 +148,9 @@ if solar_enabled then
     order = "a[light]-a[small-lamp]-b[ad-solar-light]",
     place_result = "ad-solar-light",
     stack_size = 50,
+    pick_sound = light_pick_sound,
+    drop_sound = light_drop_sound,
+    weight = 20000,
   }
 
   local recipe_solar_light = {
@@ -122,11 +158,11 @@ if solar_enabled then
     name = "ad-solar-light",
     enabled = false,
     ingredients = {
-      { "small-lamp",         4 },
-      { "electronic-circuit", 4 },
-      { "solar-panel",        1 },
+      { type = "item", name = "small-lamp",         amount = 4 },
+      { type = "item", name = "electronic-circuit", amount = 4 },
+      { type = "item", name = "solar-panel",        amount = 1 },
     },
-    result = "ad-solar-light",
+    results = { { type = "item", name = "ad-solar-light", amount = 1 } },
   }
 
   local entity_solar_light = {
@@ -172,11 +208,11 @@ if solar_enabled then
       name = "ad-solar-light",
       enabled = false,
       ingredients = {
-        { "ad-area-light",      1 },
-        { "electronic-circuit", 2 },
-        { "solar-panel",        1 },
+        { type = "item", name = "ad-area-light",      amount = 1 },
+        { type = "item", name = "electronic-circuit", amount = 2 },
+        { type = "item", name = "solar-panel",        amount = 1 },
       },
-      result = "ad-solar-light",
+      results = { { type = "item", name = "ad-solar-light", amount = 1 } },
     }
   end
 
@@ -184,10 +220,38 @@ if solar_enabled then
     recipe_solar_light.order = "nullius-bda"
     recipe_solar_light.subgroup = "railway"
     recipe_solar_light.ingredients = {
-      { "nullius-lamp-2",     1 },
-      { "electronic-circuit", 2 },
-      { "solar-panel",        1 },
+      { type = "item", name = "nullius-lamp-2",     amount = 1 },
+      { type = "item", name = "electronic-circuit", amount = 2 },
+      { type = "item", name = "solar-panel",        amount = 1 },
     }
+  end
+
+  if mods["pyhightech"] then
+    if area_enabled then
+      recipe_solar_light.ingredients = {
+        { type = "item", name = "ad-area-light", amount = 1 },
+        { type = "item", name = "copper-cable",  amount = 6 },
+        { type = "item", name = "iron-plate",    amount = 2 },
+        { type = "item", name = "copper-plate",  amount = 2 },
+        { type = "item", name = "solar-panel",   amount = 1 },
+      }
+    else
+      recipe_solar_light.ingredients = {
+        { type = "item", name = "small-lamp",   amount = 4 },
+        { type = "item", name = "copper-cable", amount = 12 },
+        { type = "item", name = "iron-plate",   amount = 4 },
+        { type = "item", name = "copper-plate", amount = 4 },
+        { type = "item", name = "solar-panel",  amount = 1 },
+      }
+    end
+  end
+
+  if mods["pyalternativeenergy"] then
+    for k, v in pairs(recipe_solar_light.ingredients) do
+      if v.name == "solar-panel" then
+        recipe_solar_light.ingredients[k].name = "multiblade-turbine-mk01"
+      end
+    end
   end
 
   table.insert(research.effects, { type = "unlock-recipe", recipe = "ad-solar-light" })
@@ -225,6 +289,9 @@ if chunk_enabled then
     order = "a[light]-a[small-lamp]-c[ad-chunk-light]",
     place_result = "ad-chunk-light",
     stack_size = 50,
+    pick_sound = heavy_pick_sound,
+    drop_sound = heavy_drop_sound,
+    weight = 20000,
   }
 
   local recipe_chunk_light = {
@@ -232,10 +299,10 @@ if chunk_enabled then
     name = "ad-chunk-light",
     enabled = false,
     ingredients = {
-      { "small-lamp",         10 },
-      { "electronic-circuit", 10 },
+      { type = "item", name = "small-lamp",         amount = 10 },
+      { type = "item", name = "electronic-circuit", amount = 10 },
     },
-    result = "ad-chunk-light",
+    results = { { type = "item", name = "ad-chunk-light", amount = 1 } },
   }
 
   local entity_chunk_light = {
@@ -278,8 +345,17 @@ if chunk_enabled then
     recipe_chunk_light.order = "nullius-bdb"
     recipe_chunk_light.subgroup = "railway"
     recipe_chunk_light.ingredients = {
-      { "nullius-lamp-2",     4 },
-      { "electronic-circuit", 10 },
+      { type = "item", name = "nullius-lamp-2",     amount = 4 },
+      { type = "item", name = "electronic-circuit", amount = 10 },
+    }
+  end
+
+  if mods["pyhightech"] then
+    recipe_chunk_light.ingredients = {
+      { type = "item", name = "small-lamp",   amount = 10 },
+      { type = "item", name = "copper-cable", amount = 30 },
+      { type = "item", name = "iron-plate",   amount = 10 },
+      { type = "item", name = "copper-plate", amount = 10 },
     }
   end
 
@@ -311,13 +387,16 @@ if radar_enabled then
         icon_size = 64,
         icon_mipmaps = 4,
         scale = 0.4,
-        shift = { x = -5, y = -5 }
+        shift = { -5, -5 }
       },
     },
     subgroup = "circuit-network",
     order = "a[light]-a[small-lamp]-d[ad-radar-light]",
     place_result = "ad-radar-light",
     stack_size = 50,
+    pick_sound = heavy_pick_sound,
+    drop_sound = heavy_drop_sound,
+    weight = 20000,
   }
 
   local recipe_radar_light = {
@@ -325,11 +404,11 @@ if radar_enabled then
     name = "ad-radar-light",
     enabled = false,
     ingredients = {
-      { "small-lamp",         100 },
-      { "electronic-circuit", 100 },
-      { "radar",              2 },
+      { type = "item", name = "small-lamp",         amount = 100 },
+      { type = "item", name = "electronic-circuit", amount = 100 },
+      { type = "item", name = "radar",              amount = 2 },
     },
-    result = "ad-radar-light",
+    results = { { type = "item", name = "ad-radar-light", amount = 1 } },
   }
 
   if chunk_enabled then
@@ -338,11 +417,11 @@ if radar_enabled then
       name = "ad-radar-light",
       enabled = false,
       ingredients = {
-        { "ad-chunk-light",     10 },
-        { "electronic-circuit", 10 },
-        { "radar",              2 },
+        { type = "item", name = "ad-chunk-light",     amount = 10 },
+        { type = "item", name = "electronic-circuit", amount = 10 },
+        { type = "item", name = "radar",              amount = 2 },
       },
-      result = "ad-radar-light",
+      results = { { type = "item", name = "ad-radar-light", amount = 1 } },
     }
   end
 
@@ -379,7 +458,7 @@ if radar_enabled then
         icon_size = 64,
         icon_mipmaps = 4,
         scale = 0.4,
-        shift = { x = -5, y = -5 }
+        shift = { -5, -5 }
       },
     },
     minable = { mining_time = 0.1, result = "ad-radar-light" },
@@ -398,6 +477,26 @@ if radar_enabled then
     recipe_radar_light.subgroup = "railway"
   end
 
+  if mods["pyhightech"] then
+    if area_enabled then
+      recipe_radar_light.ingredients = {
+        { type = "item", name = "ad-chunk-light", amount = 10 },
+        { type = "item", name = "copper-cable",   amount = 30 },
+        { type = "item", name = "iron-plate",     amount = 10 },
+        { type = "item", name = "copper-plate",   amount = 10 },
+        { type = "item", name = "radar",          amount = 2 },
+      }
+    else
+      recipe_radar_light.ingredients = {
+        { type = "item", name = "small-lamp",   amount = 100 },
+        { type = "item", name = "copper-cable", amount = 300 },
+        { type = "item", name = "iron-plate",   amount = 100 },
+        { type = "item", name = "copper-plate", amount = 100 },
+        { type = "item", name = "radar",        amount = 2 },
+      }
+    end
+  end
+
   table.insert(research.effects, { type = "unlock-recipe", recipe = "ad-radar-light" })
   data:extend {
     item_radar_light,
@@ -412,7 +511,7 @@ end
 
 if mods["nullius"] then
   research.order = "nullius-" .. research.name
-  research.prerequisites = {"nullius-illumination-2"}
+  research.prerequisites = { "nullius-illumination-2" }
   research.unit = data.raw["technology"]["nullius-illumination-2"].unit
 end
 
@@ -421,7 +520,7 @@ if separate_research then
     research,
   }
 else
-  local base_tech = "optics"
+  local base_tech = "lamp"
   if mods["nullius"] then
     base_tech = "nullius-illumination-2"
   end

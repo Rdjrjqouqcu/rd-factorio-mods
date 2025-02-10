@@ -4,17 +4,17 @@ Customized lighting for my playthroughs.
 
 Provides a Chunk Light and Radar Light, which lights up the entire chunk, and the entire radar inner range, respectively.
 
+If quality is enabled, each quality level will reduce power draw to 75%, except legenday which discounts twice.
+
 icons created by Iconic Panda - Flaticon
 Feel free to message me on discord if you have any improvements
 
-
-TODO:
-- mod recipe compat: pyanodons
 
 
 ### Current Recipe Compatibility Support
 
 - [nullius](https://mods.factorio.com/mod/nullius)
+- [pyanodons](https://mods.factorio.com/mod/pymodpack)
 
 
 https://github.com/Rdjrjqouqcu/rd-factorio-mods
