@@ -107,7 +107,7 @@ local recipe_solid_mix = {
   name = "fuel-mixing-solid",
   enabled = false,
   energy_required = 1,
-  hidden = true,
+  -- hidden = true,
   hidden_in_factoriopedia = true,
   ingredients = {},
   category = "fuel-mixing",
@@ -236,7 +236,7 @@ local recipe_fluid_mix = {
   name = "fuel-mixing-fluid",
   enabled = false,
   energy_required = 1,
-  hidden = true,
+  -- hidden = true,
   hidden_in_factoriopedia = true,
   ingredients = {},
   category = "fuel-mixing",
@@ -364,6 +364,7 @@ end
 
 if include_solid_mixer then
   table.insert(research.effects, { type = "unlock-recipe", recipe = "fuelmixer-solid" })
+  table.insert(research.effects, { type = "unlock-recipe", recipe = "fuel-mixing-solid" })
   data:extend {
     item_solid_fuel_mix,
     item_solid_fuel_mixer,
@@ -375,6 +376,7 @@ end
 
 if include_fluid_mixer then
   table.insert(research.effects, { type = "unlock-recipe", recipe = "fuelmixer-fluid" })
+  table.insert(research.effects, { type = "unlock-recipe", recipe = "fuel-mixing-fluid" })
   data:extend {
     fluid_fluid_fuel_mix,
     item_fluid_fuel_mixer,
